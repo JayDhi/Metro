@@ -2,12 +2,14 @@
 # import from framework
 from django.shortcuts import render
 from django.http import JsonResponse
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAuthenticated
 # import from project
 from .models import RouteXStation
 from .serializers import RouteXStationSerializer
 
 @api_view(['GET'])
+@permission_classes((IsAuthenticated,))
 def route_seq_list(request):
     route_x_station = RouteXStation.objects.all()
     route_x_station_slzr = RouteXStationSerializer(instance=route_x_station, many=True)

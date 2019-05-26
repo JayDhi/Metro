@@ -4,9 +4,9 @@ from django.contrib.auth.models import AbstractUser
 
 class User(AbstractUser):
     CATEGORY_TYPE = (
-        (0, 'Normal'),
-        (1, 'Admin'),
-        (2, 'SysAdmin')
+        (0, 'User'),
+        (1, 'Staff'),
+        (2, 'Admin')
     )
     category = models.IntegerField(default=0, choices=CATEGORY_TYPE)
     class Meta:
