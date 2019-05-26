@@ -2,8 +2,8 @@
 # import from framework
 from rest_framework import serializers
 # import from project
-from .models import Route
 from App.Combination.serializers import RouteXStationSerializer
+from .models import Route
 
 class RouteSerializer(serializers.ModelSerializer):
     stations = RouteXStationSerializer(source='routexstation_set', required=False, many=True)
