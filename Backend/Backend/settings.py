@@ -38,9 +38,11 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'rest_framework',
     'App.User',
     'App.Station',
     'App.Route',
+    'App.Combination',
 ]
 
 #> Auth Model

@@ -6,7 +6,7 @@ from django.urls import path
 from App.User.views import user_list, user_create
 from App.Station.views import station_list, station_create
 from App.Route.views import route_list, route_create
-
+from App.Combination.views import route_seq_list, route_seq_create
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('user_list/', user_list),
@@ -15,4 +15,6 @@ urlpatterns = [
     path('station_create/', station_create),
     path('route_list/', route_list),
     path('route_create/', route_create),
+    path('route_seq_list/', route_seq_list),
+    path('route_seq_create/', route_seq_create),
 ]
