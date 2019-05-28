@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'App.Station',
     'App.Route',
     'App.Combination',
+    'App.Flow',
 ]
 
 #> Auth Model
@@ -85,8 +86,17 @@ WSGI_APPLICATION = 'Backend.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        # 'ENGINE': 'django.db.backends.sqlite3',
+        # 'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.mysql',
+        'OPTIONS': {
+            'init_command':'SET default_storage_engine=INNODB;',
+        },
+        'NAME': 'Metro',
+        'USER': 'root',
+        'PASSWORD': '199882',
+        'HOST': 'localhost',
+        'PORT': '3306',
     }
 }
 
@@ -137,4 +147,23 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ]
+}
+
+# 在控制台输出详细信息
+LOGGING = {
+    'version':1,
+    'disable_existing_loggers':False,
+    'handlers':{
+        'console':{
+            'level':'DEBUG',
+            'class':'logging.StreamHandler',
+        },
+    },
+    'loggers':{
+        'django.db.backends':{
+            'handlers':['console'],
+            'propagate':True,
+            'level':'DEBUG'
+        },
+    }
 }
