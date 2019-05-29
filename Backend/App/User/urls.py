@@ -9,5 +9,6 @@ app_name = "User"
 urlpatterns = [
     path('obtain_token/', utils.MyTokenObtainPairView.as_view(), name='obtain_token'),
     path('refresh_token/',  TokenRefreshView.as_view(), name='refresh_token'),
+    path('register/', views.register, name='register'),
     path('get_profile/', views.view_profile, name='view_profile'),
 ]

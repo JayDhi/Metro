@@ -25,8 +25,9 @@ def get_user_menu(request):
 # validate()检测是否存在父节点对象
 @api_view(['POST'])
 @permission_classes((IsAdminUser,))
+# input json format {"parent_operation", "name", }
 def add_operation(request):
-    # serializer = OperationSerializer(data=request.data)
+    serializer = OperationSerializer(data=request.data, context={"parent_operation": request.data["parent_operation"]})
     pass
 
 @api_view(['POST'])

@@ -31,7 +31,7 @@ def user_list(request):
 
 # register
 @api_view(['POST'])
-def user_create(request):
+def register(request):
     user_slzr = UserSerializer(data=request.data)
     if user_slzr.is_valid():
         user_slzr.save()
