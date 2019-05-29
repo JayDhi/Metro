@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'App.Route',
     'App.Combination',
     'App.Flow',
+    'App.Operation',
 ]
 
 #> Auth Model
