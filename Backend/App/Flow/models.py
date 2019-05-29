@@ -2,6 +2,7 @@
 # import from framework
 from django.db import models
 import datetime, traceback
+import pickle
 # import from project
 
 def generate_fields():
@@ -70,3 +71,12 @@ def get_flow_model(year=None, month=None):
     except:
         print(traceback.print_exc())
         return Flow
+
+def get_flow_data(dates, stations):
+    FlowModel = get_flow_model()
+    return {"station_%s" % s: 
+                {"date_%s" % d: pickle.loads(
+                    FlowModel.objects.values_list("date_%s" % d, flat=True)
+                    .filter(id=s)[0]) 
+                                for d in dates} 
+                                    for s in stations}
