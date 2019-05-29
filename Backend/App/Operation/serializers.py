@@ -9,6 +9,8 @@ from .models import Operation
 class OperationSerializer(serializers.ModelSerializer):
     sub_operations = serializers.SerializerMethodField()
     url = serializers.SerializerMethodField()
+    """def get_operation_id(self, operation_name):
+        return Operation.objects.filter(name=operation_name).values('operation_id')[0]["operation_id"]"""
     def get_url(self, obj):
         if obj.app_name == "" or obj.view_name == "":
             return None
@@ -25,9 +27,15 @@ class OperationSerializer(serializers.ModelSerializer):
             return None
     def create(self, data):
         data["operation_id"] = Operation.objects.count()
-        data["parent_operation_id"] = Operation.objects.filter(name=self.context["parent_operation"]).values('operation_id')[0]["operation_id"]
+        # data["parent_operation_id"] = self.get_operation_id(self.context["parent_operation"])
         print(data)
         return Operation.objects.create(**data)
+    def update(self, instance, data):
+        for k in data:
+            setattr(instance, k, data.get(k))
+        instance.save()
+        return instance
+        
     # 自定义validate: 传入parent_operation_name, data["parent_operation_name"]
     # 但会引发KeyError: 'parent_operation_name'
     # data --> OrderedDict{} 并不含有parent_operation_name, 可能是在最初的过程中被清洗
@@ -37,7 +45,7 @@ class OperationSerializer(serializers.ModelSerializer):
             return data
         else:
             try:
-                Operation.objects.get(name=self.context["parent_operation"])
+                data["parent_operation_id"] = Operation.objects.filter(name=self.context["parent_operation"]).values('operation_id')[0]["operation_id"]
                 return data
             except:
                 raise serializers.ValidationError("Parent Operation DOES NOT exist!!")
