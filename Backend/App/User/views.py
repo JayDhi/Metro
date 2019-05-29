@@ -16,11 +16,20 @@ def test(request):
     return JsonResponse(content)
 
 @api_view(['GET'])
+@permission_classes((IsAuthenticated,))
+def view_profile(request):
+    user = User.objects.get(id=request.user.id)
+    user_slzr = UserSerializer(instance=user)
+    return JsonResponse(data=user_slzr.data)
+
+# !Admin Required #
+@api_view(['GET'])
 def user_list(request):
     user_set = User.objects.all()
     user_slzr = UserSerializer(instance=user_set, many=True)
     return JsonResponse(data=user_slzr.data, safe=False)
 
+# register
 @api_view(['POST'])
 def user_create(request):
     user_slzr = UserSerializer(data=request.data)
