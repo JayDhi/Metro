@@ -14,6 +14,7 @@ urlpatterns = [
     url('User/', include('User.urls', namespace='Users')),
     url('Station/', include('Station.urls', namespace='Station')),
     url('Route/', include('Route.urls', namespace='Route')),
+    url('Menu/', include('Operation.urls', namespace='Menu')),
     path('token/obtain/', MyTokenObtainPairView.as_view()),
     path('token/refresh/', TokenRefreshView.as_view()),
     path('admin/', admin.site.urls),
