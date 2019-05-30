@@ -6,7 +6,7 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 # import from project
 from .models import RouteXStation
-from .serializers import RouteXStationSerializer
+from .serializers import RouteXStationSerializer, EditStationToRoute
 
 @api_view(['GET'])
 @permission_classes((IsAuthenticated,))
@@ -17,7 +17,7 @@ def route_seq_list(request):
 
 @api_view(['POST'])
 def route_seq_create(request):
-    route_x_station_slzr = RouteXStationSerializer(data=request.data)
+    route_x_station_slzr = EditStationToRoute(data=request.data)
     if route_x_station_slzr.is_valid():
         route_x_station_slzr.save()
         return JsonResponse(route_x_station_slzr.data, safe=False)
