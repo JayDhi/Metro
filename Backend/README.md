@@ -66,9 +66,9 @@ numpy==1.16.4
             http [url] "Authorization: Bearer [Access Token]"
             ```
      * ```Refresh Token```
-       * ```Access Token```的有效时限是五分钟，五分钟后```Access Token```过期，届时若要访问受限```API```需要重新通过```/User/obtain_token/```获取新的```Access Token```; 或者可以选择在当前```Access Token```未过期前带上```Refresh Token```访问```/User/refresh_token/```获取新的```Access Token```以保存当前的登录状态
+       * ```Access Token```的有效时限是五分钟，五分钟后```Access Token```过期，届时若要访问受限```API```需要重新通过```/User/obtain_token/```获取新的```Access Token```; 或者可以选择在当前```Access Token```未过期前带上```Refresh Token```访问```/User/refresh_token/```获取新的```Access Token```，并在加下来的请求中在请求头中以新的```Access Token```代替旧的```Access Token```延续当前的登录状态
    * ```Menu```
-     * 适用与当前用户角色权限的可选操作菜单
+     * 适用于当前用户角色权限的可选操作菜单
 ### 客流量查询
  * API
     ```python
@@ -79,10 +79,12 @@ numpy==1.16.4
     {"dates":[1, 2, 3], "stations": [1, 2, 3]}
     dates & stations 两项的键值必须是可迭代的展开列表，可以是单一项，但必须是列表
     例如
-    {"dates": [1], "station": [1]}
+    {"dates": [1], "stations": [1]}
     ```
 
 ### 站点&路线(待更新)
+### 功能菜单(待更新)
+### 角色权限管理(待更新)
 ## 配置单元测试&数据
 ### Flow 模块
 * 数据文件
@@ -92,6 +94,7 @@ numpy==1.16.4
 * 配置脚本(单元测试配置有问题，所以在DjangoManageShell中调配(Ctrl-C&Ctrl-V))
   1. ```/Backend/```目录下执行```python manage.py shell```
         ![posi](https://jaydhipic.oss-cn-beijing.aliyuncs.com/Screen%20Shot%202019-05-30%20at%2010.45.40%20PM.png)
+
   2. 复制如下脚本
         ```python
         # 以下是依赖项
@@ -109,7 +112,7 @@ numpy==1.16.4
         nparray = np.loads('data.npy')
         intlist = [[[int(i*3000) for i in j] for j in k] for k in nparray.tolist()]
         Dic = trans(intlist)
-        # 一下是将Dic中的(2376, 81, 2)字典重排为(81, 144, 2)字典, 并存到中转变量dbCache中
+        # 以下是将Dic中的(2376, 81, 2)字典重排为(81, 144, 2)字典, 并存到中转变量dbCache中
         dbCache = {}
         for i in range(1, 82):
         dbCache[i] = regroup(retrive_one_station(i, Dic))
