@@ -7,7 +7,7 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 # import from project
 from .models import User
-from .serializers import UserSerializer
+from .serializers import UserSerializer, AdminUser, RegisterUser
 
 @api_view(['GET'])
 @permission_classes((IsAuthenticated,))
@@ -23,16 +23,31 @@ def view_profile(request):
     return JsonResponse(data=user_slzr.data)
 
 # !Admin Required #
-@api_view(['GET'])
-def user_list(request):
-    user_set = User.objects.all()
-    user_slzr = UserSerializer(instance=user_set, many=True)
-    return JsonResponse(data=user_slzr.data, safe=False)
+@api_view(['GET', 'POST'])
+def admin_user(request):
+    if request.method == 'GET':
+        user_set = User.objects.all()
+        user_slzr = AdminUser(instance=user_set, many=True)
+        return JsonResponse(data=user_slzr.data, safe=False)
+    else:
+        try:
+            
+            user = User.objects.get(id=request.data["id"])
+            print(request.data["id"])
+            user_slzr = AdminUser(instance=user, data=request.data)
+        except:
+            return JsonResponse(data={'error': 'User DOES NOT exist'})
+        if user_slzr.is_valid():
+            user_slzr.save()
+            return JsonResponse(data=user_slzr.data, safe=False)
+        else:
+            return JsonResponse(data=user_slzr.errors, safe=False)
+        
 
 # register
 @api_view(['POST'])
 def register(request):
-    user_slzr = UserSerializer(data=request.data)
+    user_slzr = RegisterUser(data=request.data)
     if user_slzr.is_valid():
         user_slzr.save()
         return JsonResponse(data=user_slzr.data, safe=False)

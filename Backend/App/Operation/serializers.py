@@ -9,8 +9,6 @@ from .models import Operation
 class OperationSerializer(serializers.ModelSerializer):
     sub_operations = serializers.SerializerMethodField()
     url = serializers.SerializerMethodField()
-    """def get_operation_id(self, operation_name):
-        return Operation.objects.filter(name=operation_name).values('operation_id')[0]["operation_id"]"""
     def get_url(self, obj):
         if obj.app_name == "" or obj.view_name == "":
             return None
@@ -30,25 +28,39 @@ class OperationSerializer(serializers.ModelSerializer):
         # data["parent_operation_id"] = self.get_operation_id(self.context["parent_operation"])
         print(data)
         return Operation.objects.create(**data)
-    def update(self, instance, data):
-        for k in data:
-            setattr(instance, k, data.get(k))
+    """def update(self, instance, data):
+        # for v in dict(data.items()+self.context.items()):
+        # for v in {**data, **self.context}:
+        print(dict((k, v) for d in (data, self.context) for k, v in d.items()))
+        for k, v in dict((k, v) for d in (data, self.context) for k, v in d.items()).items():
+            # print(k, v)
+            setattr(instance, k, v)
         instance.save()
-        return instance
+        return instance"""
         
     # 自定义validate: 传入parent_operation_name, data["parent_operation_name"]
     # 但会引发KeyError: 'parent_operation_name'
     # data --> OrderedDict{} 并不含有parent_operation_name, 可能是在最初的过程中被清洗
 
     def validate(self, data):
-        if self.context["parent_operation"] == "":
-            return data
-        else:
+        if 'parent_operation' in self.context:
             try:
                 data["parent_operation_id"] = Operation.objects.filter(name=self.context["parent_operation"]).values('operation_id')[0]["operation_id"]
                 return data
             except:
                 raise serializers.ValidationError("Parent Operation DOES NOT exist!!")
+        # check app_name & view_name
+        return data
     class Meta:
         model = Operation
         fields = ('name', 'url', 'description', 'sub_operations')
+
+class EditOperation(serializers.ModelSerializer):
+    name = serializers.CharField(required=False)
+    app_name = serializers.CharField(required=False)
+    view_name = serializers.CharField(required=False)
+    role_belong_to = serializers.CharField(required=False)
+    parent_operation_id = serializers.IntegerField(required=False)
+    class Meta:
+        model = Operation
+        fields = ('operation_id', 'name', 'app_name', 'view_name', 'role_belong_to', 'parent_operation_id')

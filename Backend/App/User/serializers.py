@@ -5,4 +5,15 @@ from .models import User
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ('username', 'role')
+        fields = ('username',)
+    
+class RegisterUser(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ('username', 'password')
+class AdminUser(serializers.ModelSerializer):
+    username = serializers.CharField(required=False)
+    role = serializers.CharField(required=False)
+    class Meta:
+        model = User
+        fields = ('id', 'username', 'role')
