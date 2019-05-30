@@ -66,9 +66,11 @@ numpy==1.16.4
             http [url] "Authorization: Bearer [Access Token]"
             ```
      * ```Refresh Token```
-       * ```Access Token```的有效时限是五分钟，五分钟后```Access Token```过期，届时若要访问受限```API```需要重新通过```/User/obtain_token/```获取新的```Access Token```; 或者可以选择在当前```Access Token```未过期前带上```Refresh Token```访问```/User/refresh_token/```获取新的```Access Token```，并在加下来的请求中在请求头中以新的```Access Token```代替旧的```Access Token```延续当前的登录状态
+       * ```Access Token```的有效时限是五分钟，五分钟后```Access Token```过期，届时若要访问受限```API```需要重新通过```/User/obtain_token/```获取新的```Access Token```; 或者可以选择在当前```Access Token```未过期前带上```Refresh Token```访问```/User/refresh_token/```获取新的```Access Token```，并在加下来的请求中以新的```Access Token```代替请求头中旧的```Access Token```延续当前的登录状态
    * ```Menu```
      * 适用于当前用户角色权限的可选操作菜单
+        ![example](https://jaydhipic.oss-cn-beijing.aliyuncs.com/Metro_register.png)
+
 ### 客流量查询
  * API
     ```python
