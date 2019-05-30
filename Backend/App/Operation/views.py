@@ -6,7 +6,7 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
 # import from project
 from .models import Operation
-from .serializers import OperationSerializer
+from .serializers import OperationSerializer, EditOperation
 
 # TO-DO: 用装饰器实现菜单过滤以及角色验证
 @api_view(['GET'])
@@ -34,3 +34,25 @@ def add_operation(request):
 @permission_classes((IsAdminUser,))
 def link(request):
     pass
+
+@api_view(['POST'])
+def update_role(request):
+    # data = ["role": [], "operation": ""]
+    """name = request.data.pop("operation")
+    operation = Operation.objects.get(name=name)
+    serializer = OperationSerializer(operation, data={"name": name}, context={"role_belong_to": request.data.pop("role")})
+    if serializer.is_valid():
+        serializer.save()
+        return JsonResponse(data=serializer.data, safe=False)
+    else:
+        return JsonResponse(serializer.errors)"""
+    try:
+        operation = Operation.objects.get(operation_id=request.data["operation_id"])
+        slzr = EditOperation(instance=operation, data=request.data)
+    except:
+        slzr = EditOperation(data=request.data)
+    if slzr.is_valid():
+        slzr.save()
+        return JsonResponse(data=slzr.data, safe=False)
+    else:
+        return JsonResponse(slzr.errors)
