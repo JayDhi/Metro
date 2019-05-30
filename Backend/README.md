@@ -162,3 +162,172 @@ numpy==1.16.4
                 setattr(flow, 'date_%s' % j, pkled)
             flow.save()
         ```
+# 开发笔记
+* 基于角色的权限管理
+  * 重构用户模型, 增添用户属性
+    ```python
+    class Account(AbstractUser):
+        CATEGORY_CHOICE = (
+            (),
+            ()
+        )
+        category = models.()
+    ```
+  * 自定义permission_classes
+    * 参考```rest_framework.permissions.IsAuthenticated```
+        ```python
+        class IsAuthenticated(BasePermission):
+            """
+            Allows access only to authenticated users.
+            """
+
+            def has_permission(self, request, view):
+                return bool(request.user and request.user.is_authenticated)
+        ```
+    1. ~~**思路一**~~
+        * 重写```has_permission()```在函数内完成权限的验证
+            >[**Django-REST Framework Object Level Permissions and User Level Permissions**](https://micropyramid.com/blog/django-rest-user-level-permissions-and-object-level-permissions/)
+            ```python
+                class IsAuthenticated(BasePermission):
+                    def has_permission(self, request, view):
+                        return bool(request.user and 
+                                request.user.is_authenticated and 
+                                request.user.category == 1)
+            ```
+            * 缺陷: ```request.user```是一个```AnonymousUser```,没有```category```属性
+                >[**Django JWT authentication - user is anonymous in middleware**](https://stackoverflow.com/questions/50793212/django-jwt-authentication-user-is-anonymous-in-middleware) 
+            
+            * 可能的解决方案: 自定义中间件```middleware```,在```django-rest-frame```的中间件拦截```HttpRequest```,并对``user``进行转换前保留对应属性<br/>
+
+                >[**A Django Rest Framework Jwt middleware to support request.user**](http://blog.sadafnoor.me/blog/a-django-rest-framework-jwt-middleware-to-support-request-user/)
+
+                >[**How add Authenticate Middleware JWT django?**](https://stackoverflow.com/questions/45266728/how-add-authenticate-middleware-jwt-django)
+        
+    2. ~~**思路二**~~
+        * 在```JWT```的```Payload```中添加所需的用户属性, 在用户发起请求验证```token```的时候解析```token```完成验证, 从```request.META```中取出```HTTP_AUTHORIZATION```并且反序列化
+        1. 修改```response_payload_handler```
+            * 对于```django-restframework-jwt```:
+               1. 参考```rest_framework_jwt.utils.jwt_reponse_payload_handler()```自定义```new_jwt_response_payload_handler()```:
+                    ```python
+                    def jwt_response_payload_handler(token, user=None, request=None):
+                        return {
+                            'token': token,
+                            'username': user.username,
+                            'user_id' : user.id,
+                            'email' : user.email
+                        }
+                    ``` 
+                2. 在```settings.py```中修改对应的处理函数
+                    ```python
+                        'JWT_RESPONSE_PAYLOAD_HANDLER':
+                        'accounts.utils.jwt_response_payload_handler',
+                    ```
+                    >[**Getting user id returned with JWT
+Ask Question**](https://stackoverflow.com/questions/54575716/getting-user-id-returned-with-jwt)
+                    >[**Store more than default information in django-rest-framework-jwt**](https://stackoverflow.com/questions/35239401/store-more-than-default-information-in-django-rest-framework-jwt)
+            * 对于```rest_framework_simplejwt```:
+                1. 继承```TokenObtainPairSerializer```,并添加属性:
+                    ```python
+                    class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
+                        def validate(self, attrs):
+                            data = super().validate(attrs)
+                            refresh = self.get_token(self.user)
+                            data['refresh'] = str(refresh)
+                            data['access'] = str(refresh.access_token)
+
+                            # Add extra responses here
+                            data['username'] = self.user.username
+                        return data
+
+
+                    class MyTokenObtainPairView(TokenObtainPairView):
+                        serializer_class = MyTokenObtainPairSerializer
+
+                    ```
+                2. 在```urls.py```中修改对应选项:
+                    ```python
+                    from Account.utils import MyTokenObtainPairView
+
+                    urlpatterns = [
+                        path('admin/', admin.site.urls),
+                        path('obtain/', MyTokenObtainPairView.as_view()),
+                    ]
+                    ```
+        * 缺陷: 修改的只是```response_payload```, 而不是```payload```, 相关属性在生成```token```的时候已经被编码
+        2. 修改```payload_handler```
+            * 对于```rest_framework_jwt```:
+                1. 参考```rest_framework_jwt.utils.jwt_payload_handler```实现自己的```jwt_payload_handler```但即便是复制原始代码, 修改```JWT_PAYLOAD_HANDLER```后会出现能取得```token```, 但在后续验证的过程中报错的情况:
+                    ```
+                    "GET /images/all/ HTTP/1.1" 401 58"
+                    "detail": "Authentication credentials were not provided."
+                    ```
+                    >[**Django Rest Framework : Authentication credentials were not provided**](https://stackoverflow.com/questions/53510881/django-rest-framework-authentication-credentials-were-not-provided)
+
+                    >[**How can i make django-rest-framework-jwt return token on registration?**](https://stackoverflow.com/questions/31147430/how-can-i-make-django-rest-framework-jwt-return-token-on-registration)
+        3. 修改```JWTMiddleWare```
+            ```python
+            import jwt
+            import traceback
+
+            from django.utils.functional import SimpleLazyObject
+            from django.utils.deprecation import MiddlewareMixin
+            from django.contrib.auth.models import AnonymousUser, User
+            from django.conf import LazySettings
+            from django.contrib.auth.middleware import get_user
+
+            settings = LazySettings()
+
+
+            class JWTAuthenticationMiddleware(MiddlewareMixin):
+                def process_request(self, request):
+                    request.user = SimpleLazyObject(lambda: self.__class__.get_jwt_user(request))
+
+                @staticmethod
+                def get_jwt_user(request):
+
+                    user_jwt = get_user(request)
+                    if user_jwt.is_authenticated():
+                        return user_jwt
+                # token = request.META.get('HTTP_AUTHORIZATION', None)
+                    token = request.META.get('AUTHORIZATION', None)
+
+                    user_jwt = AnonymousUser()
+                    if token is not None:
+                        try:
+                            user_jwt = jwt.decode(
+                                        token,
+                                        settings.WP_JWT_TOKEN,
+                                        )
+                            user_jwt = User.objects.get(
+                                id=user_jwt['data']['user']['id']
+                            )
+                        except Exception as e: # NoQA
+                            traceback.print_exc()
+                        return user_jwt
+            ```
+
+    3. **思路三**
+        > [**Django Permission进阶使用**](https://segmentfault.com/a/1190000007124746)
+        1. 在每个对象上添加不同的权限
+            在```DjangoShell```中
+            ```python
+            from django.contrib.auth.models import Group, Permission
+            from django.contrib.contenttypes.models import ContentType
+ 
+            content_type = ContentType.objects.get(app_label='school', model='Discussion')
+            permission = Permission.objects.create(codename='can_publish',
+                                                name='Can Publish Discussions',
+                                                content_type=content_type)
+
+            ```
+        2. 对用户进行分组
+            在```Django```后台进行分组权限操作的时候会报错```(Django==2.0.2)```
+            ```no such table: main.auth_permission__old```
+            >[no such table: main.auth_user__old](https://www.baidu.com/s?wd=no+such+table:+main.auth_permission__old&tn=84053098_3_dg&ie=utf-8)
+        3. 对不同分组进行授权
+        4. 在```permission_classes```的```has_permission```中进行验证
+            ```python
+            class IsCat0(BaseException):
+                def has_permission(self, request, view):
+                    return request.user.has_perm('auth.group.can_add_userq')
+            ```
