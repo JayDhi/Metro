@@ -50,6 +50,30 @@ numpy==1.16.4
    ```python
    python manage.py runserver
    ```
+## ```API```列表
+### ```User/```
+ * ```POST: register/```注册
+   * 数据格式
+     ```
+     {"username": "username", "password": "password"}
+     ```
+ * ```POST: obtain_token/```令牌获取
+   * 数据格式
+     ```
+     {"username": "username", "password": "password"}
+     ```
+ * ```GET: admin_user/```管理用户(需要Access Token&管理员权限)
+   * [在请求头中带上```Access Token```](#jump)
+   * 设置管理员账号
+     ```python
+     python manage.py createsuperuser
+     ```
+### ```Flow/```
+ * ```GET: show_flow/```获取某日期(范围内)某(些)站点的客流量
+   * [数据格式](#flow_query)
+     ```
+     {"dates": [date_1, date_2], "stations": [s_1, s_2]}
+     ```
 ## 功能模块
 ### 用户认证
 #### 登录&注册
@@ -66,7 +90,7 @@ numpy==1.16.4
  * 返回值:
    * ```Token```
      * ```Access Token```
-       * 对于需要身份验证的```API```需要在请求头部带上
+       * <span id="jump">对于需要身份验证的```API```需要在请求头部带上</span>
          * ```PostMan```
             ![postman](https://jaydhipic.oss-cn-beijing.aliyuncs.com/PostMan.png)
          * ```cUrl```
@@ -88,7 +112,7 @@ numpy==1.16.4
     ```python
     http://127.0.0.1:8000/Flow/show_flow/
     ```
- * 数据格式
+ * <span id="flow_query">数据格式</span>
     ```
     {"dates":[1, 2, 3], "stations": [1, 2, 3]}
     dates & stations 两项的键值必须是可迭代的展开列表，可以是单一项，但必须是列表
