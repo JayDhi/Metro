@@ -11,5 +11,6 @@ urlpatterns = [
     url('Route/', include('Route.urls', namespace='Route')),
     url('Menu/', include('Operation.urls', namespace='Menu')),
     url('Flow/', include('Flow.urls', namespace='Flow')),
+    url('Combination/', include('Combination.urls', namespace='Combination')),
     path('admin/', admin.site.urls),
 ]
