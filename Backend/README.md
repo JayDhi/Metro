@@ -38,6 +38,18 @@ numpy==1.16.4
     show variables like '%storage_engine%';
     ```
     ![SQLEnginee](https://jaydhipic.oss-cn-beijing.aliyuncs.com/SQLEnginee.png)
+## 本地运行
+1. 在```settings.py```中配置数据库连接
+   ![settings](https://jaydhipic.oss-cn-beijing.aliyuncs.com/settings.png)
+2. 在```/Backend/```下执行
+    ```python
+    python manage.py makemigrations
+    python maange.py migrate
+    ```
+3. 执行如下命令以测试各项```API```
+   ```python
+   python manage.py runserver
+   ```
 ## 功能模块
 ### 用户认证
 #### 登录&注册
@@ -93,10 +105,10 @@ numpy==1.16.4
     ```
     /Backend/data.npy
     ```
+    ![posi](https://jaydhipic.oss-cn-beijing.aliyuncs.com/Screen%20Shot%202019-05-30%20at%2010.45.40%20PM.png)
+
 * 配置脚本(单元测试配置有问题，所以在DjangoManageShell中调配(Ctrl-C&Ctrl-V))
   1. ```/Backend/```目录下执行```python manage.py shell```
-        ![posi](https://jaydhipic.oss-cn-beijing.aliyuncs.com/Screen%20Shot%202019-05-30%20at%2010.45.40%20PM.png)
-
   2. 复制如下脚本
         ```python
         # 以下是依赖项
