@@ -131,7 +131,7 @@ numpy==1.16.4
     ```
     ![posi](https://jaydhipic.oss-cn-beijing.aliyuncs.com/Screen%20Shot%202019-05-30%20at%2010.45.40%20PM.png)
 
-* 配置脚本(单元测试配置有问题，所以在DjangoManageShell中调配(Ctrl-C&Ctrl-V))
+* 配置脚本(单元测试配置有问题，所以在DjangoManageShell中调配(```Ctrl-C```&```Ctrl-V```))
   1. ```/Backend/```目录下执行```python manage.py shell```
   2. 复制如下脚本
         ```python
@@ -153,12 +153,12 @@ numpy==1.16.4
         # 以下是将Dic中的(2376, 81, 2)字典重排为(81, 144, 2)字典, 并存到中转变量dbCache中
         dbCache = {}
         for i in range(1, 82):
-        dbCache[i] = regroup(retrive_one_station(i, Dic))
+            dbCache[i] = regroup(retrive_one_station(i, Dic))
         # dbCache的格式应该是{station:{date: {in & out}}}
         for i in range(1, 82):
-        flow = get_flow_model().objects.create(id=i)
-        for j in range(1, 20):
-            pkled = pickle.dumps(dbCache[i][j])
-            setattr(flow, 'date_%s' % j, pkled)
-        flow.save()
+            flow = get_flow_model().objects.create(id=i)
+            for j in range(1, 20):
+                pkled = pickle.dumps(dbCache[i][j])
+                setattr(flow, 'date_%s' % j, pkled)
+            flow.save()
         ```
