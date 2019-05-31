@@ -1,3 +1,5 @@
+# 更新内容
+[**戳我传送**](#whats_new)
 # 项目介绍
 ## 环境配置
 ### 框架依赖
@@ -74,6 +76,52 @@ numpy==1.16.4
      ```
      {"dates": [date_1, date_2], "stations": [s_1, s_2]}
      ```
+### <span id="whats_new">```Station/```</span>
+ * ```GET: get_station```获取某(些)站点的信息
+   * 数据格式
+     * 无```json```请求, 返回所有站点的信息<br/>
+        ![response_all_station](https://jaydhipic.oss-cn-beijing.aliyuncs.com/5_31/reponse_get_station_without_json.png)<br/>
+     * 获取选中站点的信息
+        ```python
+        {"stations": [1, 2, 3]}
+        # station键值必须是列表
+        {"stations": [1]}
+        ```
+
+        ![request_some_stations](https://jaydhipic.oss-cn-beijing.aliyuncs.com/5_31/request_get_menu_with_json.png)<br/>
+        ![response_some_stations](https://jaydhipic.oss-cn-beijing.aliyuncs.com/5_31/response_get_station_with_json.png)<br/>
+ * ```POST: edit_station```编辑站点信息
+   * 数据格式
+     * 创建新站点
+        ```python
+        {"station_info": {"station_name": "Station1"},
+        # 下面这项可以省略, 省略的时候默认创建一个不属于任何线路的站点
+         "relationship": {"route_id": 1, "seq": 2}
+        }
+        ```
+
+        ![1](https://jaydhipic.oss-cn-beijing.aliyuncs.com/5_31/reponse_before_add_station.png)<br/>
+        ![request_add_station](https://jaydhipic.oss-cn-beijing.aliyuncs.com/5_31/request_add_station.png)<br/>
+        ![response_add_station](https://jaydhipic.oss-cn-beijing.aliyuncs.com/5_31/reponse_after_add_station.png)<br/>
+     * 编辑现有站点信息
+        ```python
+        {"station_info": {"station_name": "Station1"},
+         "relationship": {"route_id": 1, "seq": 3}
+        }
+        ```
+        需要注意的是如果```relationship```中的```route_id```不存在, 或者是```route_id X seq```的组合存在的话, 会返回报错信息
+         * 例如:<br/>
+            ![2](https://jaydhipic.oss-cn-beijing.aliyuncs.com/5_31/dumpliacte.png)<br/>
+         * 正确请求<br/>
+            ![1](https://jaydhipic.oss-cn-beijing.aliyuncs.com/5_31/request_edit_exist_station.png)<br/>
+            ![3](https://jaydhipic.oss-cn-beijing.aliyuncs.com/5_31/response_after_edit_exist_station.png)<br/>
+         * 错误请求<br/>
+           * 存在站点<br/>
+            ![1](https://jaydhipic.oss-cn-beijing.aliyuncs.com/5_31/dumpl.png)<br/>
+           * 试图覆盖<br/>
+            ![2](https://jaydhipic.oss-cn-beijing.aliyuncs.com/5_31/request_dupliacte_seq.png)<br/>
+            ![3](https://jaydhipic.oss-cn-beijing.aliyuncs.com/5_31/reponse_dump.png)<br/>
+
 ## 功能模块
 ### 用户认证
 #### 登录&注册
@@ -113,10 +161,10 @@ numpy==1.16.4
     http://127.0.0.1:8000/Flow/show_flow/
     ```
  * <span id="flow_query">数据格式</span>
-    ```
+    ```python
     {"dates":[1, 2, 3], "stations": [1, 2, 3]}
-    dates & stations 两项的键值必须是可迭代的展开列表，可以是单一项，但必须是列表
-    例如
+    # dates & stations 两项的键值必须是可迭代的展开列表，可以是单一项，但必须是列表
+    # 例如
     {"dates": [1], "stations": [1]}
     ```
 

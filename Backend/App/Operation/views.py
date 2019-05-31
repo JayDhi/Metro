@@ -17,6 +17,7 @@ from .serializers import ShowOperation, EditOperation
 @api_view(['GET'])
 @permission_classes((IsAuthenticated,))
 def get_menu(request):
+    # 不用get()而用filter()
     top_operations = Operation.objects.filter(role__contains=str(request.user.role), parent_operation=0)
     menu = ShowOperation(top_operations, context={"role": str(request.user.role)}, many=True)
     return JsonResponse(data=menu.data, safe=False)
@@ -33,9 +34,10 @@ def get_menu(request):
 def edit_menu(request):
     try:
         operation = Operation.objects.get(operation_id=request.data["operation_id"])
-        slzr = EditOperation(instance=operation, data=request.data)
     except:
         slzr = EditOperation(data=request.data)
+    else:
+        slzr = EditOperation(instance=operation, data=request.data)
     if slzr.is_valid():
         slzr.save()
         return JsonResponse(data=slzr.data, safe=False)

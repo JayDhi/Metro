@@ -7,11 +7,13 @@ from .models import User
 from App.Operation.models import Operation
 from App.Operation.serializers import ShowOperation
 
+# 用于显示个人信息
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ('username',)
 
+# 用于注册用户
 # 唯一在用户数据中插入菜单数据的地方    
 class RegisterUser(serializers.ModelSerializer):
     role = serializers.CharField(required=False)
@@ -39,6 +41,8 @@ class RegisterUser(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ('username', 'password', 'role', 'token', 'menu')
+
+# 用于"管理用户"
 class AdminUser(serializers.ModelSerializer):
     username = serializers.CharField(required=False)
     role = serializers.CharField(required=False)
