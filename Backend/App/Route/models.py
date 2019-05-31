@@ -5,7 +5,7 @@ from django.db import models
 
 class Route(models.Model):
     route_id = models.IntegerField(primary_key=True)
-    route_name = models.CharField(max_length=20, default="")
+    route_name = models.CharField(max_length=20, default="", unique=True)
     class Meta:
         permissions = (
                        ('can_view_route', 'Can View Route'),

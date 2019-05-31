@@ -19,7 +19,7 @@ def get_station(request):
     
 
 # input format
-# {"station": {"station_id"}, "relation": {"route"}}
+# {"station": {"station_name"}, "relation": {"route"}}
 # validate customize: relation
 @api_view(['POST'])
 def edit_station(request):

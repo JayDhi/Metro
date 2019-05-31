@@ -24,9 +24,9 @@ class EditStation(serializers.ModelSerializer):
         # route_x_station = RouteXStation.objects.create(station_id=station.id, seq=data, route_id=data["route_id"])
         # 不能在此使用route=Route.objects.get()会导致交叉引用
         try:
-            midslzr = RouteXStationSerializer(data={"route": data["route_id"], "seq": data["seq"], "station": station.station_id})
-            if midslzr.is_valid():
-                midslzr.save()
+            combination = RouteXStationSerializer(data={"route": data["route_id"], "seq": data["seq"], "station": station.station_id})
+            if combination.is_valid():
+                combination.save()
             else:
                 raise Exception("Failed to combine route & station")
         except KeyError:
@@ -35,12 +35,12 @@ class EditStation(serializers.ModelSerializer):
     def update(self, instance, data):
         # 去掉原先的关联
         try:
-            ex_relation = RouteXStation.objects.filter(route_id = data["route_id"], station_id = instance.station_id)
+            ex_relation = RouteXStation.objects.filter(route_id=data["route_id"], station_id=instance.station_id)
             if ex_relation:
                 ex_relation.delete()
-            midslzr = RouteXStationSerializer(data={"route":data.pop("route_id"), "seq": data.pop("seq"), "station": instance.station_id})
-            if midslzr.is_valid():
-                midslzr.save()
+            new_combination = RouteXStationSerializer(data={"route":data.pop("route_id"), "seq": data.pop("seq"), "station": instance.station_id})
+            if new_combination.is_valid():
+                new_combination.save()
             else:
                 raise Exception("Failed to combine route & station")
         except KeyError:
@@ -59,7 +59,7 @@ class EditStation(serializers.ModelSerializer):
         # RouteXStation & RouteXStationSerializer列名的对应关系
         # |     RouteXStation        | route_di | seq | station_id
         # | RouteXStationSerializer  | route    | seq | station
-            route = RouteXStation.objects.filter(route_id = self.context["route_id"])
+            route = RouteXStation.objects.filter(route_id=self.context["route_id"])
             if route:
                 try:
                     route.get(seq=self.context["seq"])
@@ -70,7 +70,7 @@ class EditStation(serializers.ModelSerializer):
                 else:
                     raise serializers.ValidationError("seq dumplicate")
             else:
-                raise serializers.ValidationError("Route of route DOES NOT exist")                      
+                raise serializers.ValidationError("Route of route_id DOES NOT exist")                      
         else:
             return data
     class Meta:

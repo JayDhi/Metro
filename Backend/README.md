@@ -76,8 +76,8 @@ numpy==1.16.4
      ```
      {"dates": [date_1, date_2], "stations": [s_1, s_2]}
      ```
-### <span id="whats_new">```Station/```</span>
- * ```GET: get_station```获取某(些)站点的信息
+### ```Station/```
+ * ```GET: get_station/```获取某(些)站点的信息
    * 数据格式
      * 无```json```请求, 返回所有站点的信息<br/>
         ![response_all_station](https://jaydhipic.oss-cn-beijing.aliyuncs.com/5_31/reponse_get_station_without_json.png)<br/>
@@ -90,7 +90,7 @@ numpy==1.16.4
 
         ![request_some_stations](https://jaydhipic.oss-cn-beijing.aliyuncs.com/5_31/request_get_menu_with_json.png)<br/>
         ![response_some_stations](https://jaydhipic.oss-cn-beijing.aliyuncs.com/5_31/response_get_station_with_json.png)<br/>
- * ```POST: edit_station```编辑站点信息
+ * ```POST: edit_station/```编辑站点信息
    * 数据格式
      * 创建新站点
         ```python
@@ -121,6 +121,41 @@ numpy==1.16.4
            * 试图覆盖<br/>
             ![2](https://jaydhipic.oss-cn-beijing.aliyuncs.com/5_31/request_dupliacte_seq.png)<br/>
             ![3](https://jaydhipic.oss-cn-beijing.aliyuncs.com/5_31/reponse_dump.png)<br/>
+
+###<span id="whats_new">```Route/```</span>
+ * ```GET: get_route/```获取某(些)线路信息
+    * 数据格式
+        ```python
+        {"route": [1, 2, 3]}
+        {"route": [1]}
+        # 不提供请求数据则默认返回所有路线信息
+        ```
+ * ```POST: edit_route/```编辑某线路信息
+    * 数据格式
+        ```python
+        {
+            # 如果是不存在的路线, 将会新建一个路线;
+            # 而如果存在, 则会修改对应路线的信息
+            "route_info": {
+                "route_name": "Route 1"
+            },
+            # 和Staiton里的相似, 不提供该项的时候将不会修改该路线的附属站点信息
+            # relation里面的元素还是一个字典: "station": {"station_id", "seq"}
+            # 跟station中对应API的数据格式有区别
+            "relationship": {
+                "s1": {
+                    "station_id": 1,
+                    "seq": 1
+                },
+                "s2": {
+                    "station_id": 2,
+                    "seq": 2
+                },
+            }
+        }
+        ```
+        ![1](https://jaydhipic.oss-cn-beijing.aliyuncs.com/5_31/route2.png)
+        ![2](https://jaydhipic.oss-cn-beijing.aliyuncs.com/5_31/route1.png)
 
 ## 功能模块
 ### 用户认证

@@ -6,6 +6,6 @@ from App.Route import views
 
 app_name="Route"
 urlpatterns = [
-    path('list_route/', views.route_list, name='list_route'),
-    path('add_route/', views.route_create, name='add_route'),
+    path('get_route/', views.get_route, name='get_route'),
+    path('edit_route/', views.edit_route, name='edit_route'),
 ]

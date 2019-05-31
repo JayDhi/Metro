@@ -6,6 +6,6 @@ from App.Station import views
 
 app_name="Station"
 urlpatterns = [
-    path('get_station/', views.get_station, name='list_station'),
-    path('edit_station/', views.edit_station, name='add_station'),
+    path('get_station/', views.get_station, name='get_station'),
+    path('edit_station/', views.edit_station, name='edit_station'),
 ]
