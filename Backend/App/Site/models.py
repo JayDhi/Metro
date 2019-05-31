@@ -11,4 +11,4 @@ class Site(models.Model):
     site_y_cor = models.IntegerField(default="")
     site_fav_rate = models.IntegerField(default=0)
     def __str__(self):
-        return "site name: "self.site_name+'\n'+"site description: "+self.site_description
+        return "site name: "+self.site_name+'\n'+"site description: "+self.site_description
