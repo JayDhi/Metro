@@ -74,6 +74,9 @@ def get_flow_model(year=None, month=None):
 
 def get_flow_data(dates, stations):
     FlowModel = get_flow_model()
+    # 可以写成这样, 但是因为需要对每一条记录转换, 这样写还需要重新遍历字典进行转换
+    # station = [], dates = []
+    # return set = get_flow_model().filter(id__in=station).value_list(*dates)
     return {"station_%s" % s: 
                 {"date_%s" % d: pickle.loads(
                     FlowModel.objects.values_list("date_%s" % d, flat=True)

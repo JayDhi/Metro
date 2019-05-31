@@ -12,3 +12,9 @@ class RouteXStation(models.Model):
 
     def __str__(self):
         return "No. " + str(self.seq) + " Station: " + self.station.station_name + " of Route: " + self.route.route_name
+
+# 用户常去的站点
+# Class UserXStation
+
+# 用户常去的地点
+# Class UserXSite

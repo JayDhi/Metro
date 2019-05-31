@@ -5,19 +5,37 @@ from django.http import JsonResponse
 from rest_framework.decorators import api_view
 # import from project
 from .models import Station
-from .serializers import StationSerializer
+from .serializers import ShowStation, EditStation
 
 @api_view(['GET'])
-def station_list(request):
-    station_set = Station.objects.all()
-    station_slzr = StationSerializer(instance=station_set, many=True)
-    return JsonResponse(data=station_slzr.data, safe=False)
-
-@api_view(['POST'])
-def station_create(request):
-    station_slzr = StationSerializer(data=request.data)
-    if station_slzr.is_valid():
-        station_slzr.save()
-        return JsonResponse(data=station_slzr.data, safe=False)
+def get_station(request):
+    if "station" in request.data:
+        slzr = ShowStation(Station.objects.filter(
+                                        station_id__in=request.data["station"]), 
+                                            many=True)
     else:
-        return JsonResponse(station_slzr.errors)
+        slzr = ShowStation(Station.objects.all(), many=True)
+    return JsonResponse(data=slzr.data, safe=False)
+    
+
+# input format
+# {"station": {"station_id"}, "relation": {"route"}}
+# validate customize: relation
+@api_view(['POST'])
+def edit_station(request):
+    data = request.data["station_info"]
+    context = request.data["relationship"]
+    try:
+        station = Station.objects.get(station_name=data["station_name"])
+    except KeyError:
+        return JsonResponse(data={"errors": "Check Json Parameter"})
+    except Station.DoesNotExist:
+        slzr = EditStation(data=data, context=context)
+    else:
+        slzr = EditStation(station, data=data, context=context)
+    if slzr.is_valid():
+        slzr.save()
+        return JsonResponse(data=slzr.data, safe=False)
+    else:
+        return JsonResponse(slzr.errors)
+    

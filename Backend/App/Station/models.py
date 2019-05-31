@@ -5,9 +5,9 @@ from django.db import models
 
 class Station(models.Model):
     station_id = models.IntegerField(primary_key=True)
-    station_name = models.CharField(max_length=20, default="")
-    station_x_cor = models.IntegerField()
-    station_y_cor = models.IntegerField()
+    station_name = models.CharField(max_length=20, default="", unique=True)
+    station_x_cor = models.IntegerField(default=0)
+    station_y_cor = models.IntegerField(default=0)
     class Meta:
         permissions = (
                        ('can_view_station', 'Can View Station'),
