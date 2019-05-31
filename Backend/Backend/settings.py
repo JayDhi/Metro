@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'App.Flow',
     'App.Operation',
     'App.Site',
+    'App.Post',
 ]
 
 #> Auth Model
