@@ -71,10 +71,10 @@ numpy==1.16.4
      python manage.py createsuperuser
      ```
 ### ```Flow/```
- * ```GET: show_flow/```获取某日期(范围内)某(些)站点的客流量
+ * <span id="whats_new">```GET: show_flow/```</span>获取某日期(范围内)某(些)站点的客流量
    * [数据格式](#flow_query)
      ```
-     {"dates": [date_1, date_2], "stations": [s_1, s_2]}
+     {"year": 2019, "month": 5, "dates": [date_1, date_2], "stations": [s_1, s_2]}
      ```
 ### ```Station/```
  * ```GET: get_station/```获取某(些)站点的信息
@@ -122,7 +122,7 @@ numpy==1.16.4
             ![2](https://jaydhipic.oss-cn-beijing.aliyuncs.com/5_31/request_dupliacte_seq.png)<br/>
             ![3](https://jaydhipic.oss-cn-beijing.aliyuncs.com/5_31/reponse_dump.png)<br/>
 
-### <span id="whats_new">```Route/```</span>
+### ```Route/```
  * ```GET: get_route/```获取某(些)线路信息
     * 数据格式
         ```python
@@ -197,10 +197,10 @@ numpy==1.16.4
     ```
  * <span id="flow_query">数据格式</span>
     ```python
-    {"dates":[1, 2, 3], "stations": [1, 2, 3]}
+    {"year": 2019, "month": 5, "dates":[1, 2, 3], "stations": [1, 2, 3]}
     # dates & stations 两项的键值必须是可迭代的展开列表，可以是单一项，但必须是列表
     # 例如
-    {"dates": [1], "stations": [1]}
+    {"year": 2019, "month": 5, "dates": [1], "stations": [1]}
     ```
 
 ### 站点&路线(待更新)

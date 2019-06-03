@@ -72,8 +72,8 @@ def get_flow_model(year=None, month=None):
         print(traceback.print_exc())
         return Flow
 
-def get_flow_data(dates, stations):
-    FlowModel = get_flow_model()
+def get_flow_data(year, month, dates, stations):
+    FlowModel = get_flow_model(year=year, month=month)
     # 可以写成这样, 但是因为需要对每一条记录转换, 这样写还需要重新遍历字典进行转换
     # station = [], dates = []
     # return set = get_flow_model().filter(id__in=station).value_list(*dates)
