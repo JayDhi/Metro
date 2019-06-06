@@ -134,12 +134,7 @@ DATABASES = {
         'NAME': 'Metro',
         'USER': 'root',
         'PASSWORD': 'lanyushi123',
-<<<<<<< HEAD
-        'HOST': '127.0.0.1',
-=======
-        # 'HOST': '127.0.0.1',
         'HOST': 'localhost',
->>>>>>> 4b2d7399d763d2213c28d1af6047519224ebefcc
         'PORT': '3306',
     }
 }
