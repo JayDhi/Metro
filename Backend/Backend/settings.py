@@ -10,11 +10,12 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/2.0/ref/settings/
 """
 
-import os, sys
+import os
+import sys
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-#> App Directory
+# > App Directory
 sys.path.insert(0, os.path.join(BASE_DIR, 'App'))
 
 # Quick-start development settings - unsuitable for production
@@ -28,11 +29,41 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+# 跨域增加忽略
+CORS_ALLOW_CREDENTIALS = True
+CORS_ORIGIN_ALLOW_ALL = True
+# CORS_ORIGIN_WHITELIST = (
+#     'http://'
+# )
+CORS_ALLOW_METHODS = (
+    'DELETE',
+    'GET',
+    'OPTIONS',
+    'PATCH',
+    'POST',
+    'PUT',
+    'VIEW',
+)
+CORS_ALLOW_HEADERS = (
+    'XMLHttpRequest',
+    'X_FILENAME',
+    'accept-encoding',
+    'authorization',
+    'content-type',
+    'dnt',
+    'origin',
+    'user-agent',
+    'x-csrftoken',
+    'x-requested-with',
+)
+# 部署到云服务上必备
+ALLOWED_HOSTS = ['*']
 
 # Application definition
 
 INSTALLED_APPS = [
     'django.contrib.admin',
+    'corsheaders',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
@@ -50,12 +81,13 @@ INSTALLED_APPS = [
     'App.Post',
 ]
 
-#> Auth Model
+# > Auth Model
 AUTH_USER_MODEL = 'User.User'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',  # 默认
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -93,11 +125,11 @@ DATABASES = {
         # 'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
         'ENGINE': 'django.db.backends.mysql',
         'OPTIONS': {
-            'init_command':'SET default_storage_engine=INNODB;',
+            'init_command': 'SET default_storage_engine=INNODB;',
         },
         'NAME': 'Metro',
         'USER': 'root',
-        'PASSWORD': '199882',
+        'PASSWORD': 'lanyushi123',
         'HOST': '127.0.0.1',
         'PORT': '3306',
     }
@@ -154,19 +186,19 @@ REST_FRAMEWORK = {
 
 # 在控制台输出详细信息
 LOGGING = {
-    'version':1,
-    'disable_existing_loggers':False,
-    'handlers':{
-        'console':{
-            'level':'DEBUG',
-            'class':'logging.StreamHandler',
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'level': 'DEBUG',
+            'class': 'logging.StreamHandler',
         },
     },
-    'loggers':{
-        'django.db.backends':{
-            'handlers':['console'],
-            'propagate':True,
-            'level':'DEBUG'
+    'loggers': {
+        'django.db.backends': {
+            'handlers': ['console'],
+            'propagate': True,
+            'level': 'DEBUG'
         },
     }
 }
