@@ -100,7 +100,7 @@ ROOT_URLCONF = 'Backend.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': ['../vue-bmap-demo/dist'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -111,6 +111,10 @@ TEMPLATES = [
             ],
         },
     },
+]
+
+STATICFILES_DIR = [
+    os.path.join(BASE_DIR, "../vue-bmap-demo/dist/static"),
 ]
 
 WSGI_APPLICATION = 'Backend.wsgi.application'
@@ -130,7 +134,12 @@ DATABASES = {
         'NAME': 'Metro',
         'USER': 'root',
         'PASSWORD': 'lanyushi123',
+<<<<<<< HEAD
         'HOST': '127.0.0.1',
+=======
+        # 'HOST': '127.0.0.1',
+        'HOST': 'localhost',
+>>>>>>> 4b2d7399d763d2213c28d1af6047519224ebefcc
         'PORT': '3306',
     }
 }

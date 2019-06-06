@@ -1,1 +1,1 @@
-find . -name "*.pyc" -exec git rm -f "{}" \
+find . -name "*.pyc" -exec git rm -f "{}" \;
