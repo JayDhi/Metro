@@ -61,9 +61,42 @@ import Axios from "axios";
 export default {
   methods: {
     login() {
-      Axios.get("http://127.0.0.1:8000/Station/get_station/").then(response =>
-        console.log(response.data)
-      );
+      // for test
+      // Axios.get("http://127.0.0.1:8000/Station/get_station/").then(response =>
+      //   console.log(response.data)
+      // );
+      Axios.post("http://127.0.0.1:8000/User/obtain_token/", {
+        username: "JayDHi",
+        password: "199882"
+      })
+        .then(function(response) {
+          var data = response.data;
+          var url_string = "http://127.0.0.1:8000/User/get_profile/";
+          let token = data.access;
+          console.log(data);
+
+          // var config = {
+          //   headers: {
+          //     Authorization: "bearer " + data.access
+          //     // 'Accept': "application/json, text/plain, */*",
+          //     // "Content-Type": "application/json"
+          //   }
+          // };
+
+          // var bodyParameters = {
+          //   key: "value"
+          // };
+          // console.log(data.access);
+          Axios.get(url_string, {
+            headers: {
+              Authorization: "Bearer " + token
+            }
+         })
+        .then(response => console.log(response.data))
+        })
+        .catch(function(error) {
+          console.log(error);
+        });
       // this.$router.replace("/");
     }
   }
