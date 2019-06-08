@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>JTopo 教程</title>
+    <script src="jquery.js" type="text/javascript"></script>
+    <script src="jtopo.js" type="text/javascript"></script>
+    <script type="text/javascript">
+        $(document).ready(function() {
+            //画布对象：canvas
+            var canvas = document.getElementById('canvas');
+            //抽象的舞台对象对应一个Canvas对象，所有图形展示的地方
+            var stage = new JTopo.Stage(canvas);
+            //场景对象
+            var scene = new JTopo.Scene(stage);
+            //背景颜色设置
+            scene.background='#CDC5BF';
+            //节点添加
+            var node = new JTopo.Node("EMC");
+            //设置节点位置
+            node.setLocation(150, 100);
+            //节点填充颜色
+            node.fillcolor='#CD0000';
+            //场景对象添加节点
+            scene.add(node);
+        });
+    </script>
+</head>
+<body>
+     <canvas id="canvas" width="300" height="200"></canvas>
+</body>
+</html>
