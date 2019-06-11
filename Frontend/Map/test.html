@@ -1,0 +1,44 @@
+
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>JTopo 教程之连线</title>
+    <script src="jquery.js" type="text/javascript"></script>
+    <script src="jtopo.js" type="text/javascript"></script>
+    <script type="text/javascript">
+        $(document).ready(function() {
+            //画布对象：canvas
+            var canvas = document.getElementById('canvas');
+            //抽象的舞台对象对应一个Canvas对象，所有图形展示的地方
+            var stage = new JTopo.Stage(canvas);
+            //场景对象
+            var scene = new JTopo.Scene(stage);
+            //背景颜色设置
+            scene.background='#CDC5BF';
+            //节点之间------------连线
+            var vm= new JTopo.Node('vm');  //节点1：vm
+            vm.setLocation(100,180);//节点1：vm位置设置
+            scene.add(vm);//场景对象添加节点1：vm
+ 
+            var physical=new JTopo.Node('physical');//节点2：physical
+            physical.setLocation(100,20);//节点2:physical 位置设置
+            scene.add(physical);//场景对象添加节点2：physical
+ 
+            var link=new JTopo.Link(vm,physical);//连线对象
+            link.lineWidth = 3;//连线大小
+            link.lineJoin  = 'round';
+            link.name='Link';//连线名称
+            scene.add(link);//场景对象添加连线对象：link.
+        });
+    </script>
+</head>
+<body>
+<canvas id="canvas" width="300" height="200"></canvas>
+</body>
+</html>
+--------------------- 
+作者：在奋斗的大道 
+来源：CSDN 
+原文：https://blog.csdn.net/zhouzhiwengang/article/details/28427663 
+版权声明：本文为博主原创文章，转载请附上博文链接！
