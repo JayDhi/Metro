@@ -6,7 +6,7 @@ from rest_framework.decorators import api_view
 # import from project
 from .models import get_flow_data
 
-@api_view(['GET'])
+@api_view(['POST'])
 def show_flow(request):
     data = get_flow_data(year=request.data["year"],
                          month=request.data["month"],
