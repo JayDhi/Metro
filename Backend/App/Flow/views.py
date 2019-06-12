@@ -8,8 +8,8 @@ from .models import get_flow_data
 
 @api_view(['GET'])
 def show_flow(request):
-    data = get_flow_data(year=request.data["year"],
-                         month=request.data["month"],
-                         dates=request.data["dates"], 
-                         stations=request.data["stations"])
+    data = get_flow_data(year=request.query_params["year"],
+                         month=request.query_params["month"],
+                         dates=request.query_params["dates"], 
+                         stations=request.query_params["stations"])
     return JsonResponse(data=data, safe=False)
