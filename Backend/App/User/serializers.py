@@ -11,7 +11,7 @@ from App.Operation.serializers import ShowOperation
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ('username',)
+        fields = ('username', 'role')
 
 # 用于注册用户
 # 唯一在用户数据中插入菜单数据的地方    
